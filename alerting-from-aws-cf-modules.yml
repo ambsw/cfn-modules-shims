@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for an Application Load Balancer Module from aws-cf-modules to cfn-modules (e.g. a fargate/ecs cluster/service)'
+Parameters:
+  ParentAlertStack:
+    Description: 'Parent alert stack based on operations/alert.yaml template.'
+    Type: String
+Outputs:
+  ModuleId:
+    Value: 'alerting'
+  ModuleVersion:
+    Value: '1.2.0'
+  StackName:
+    Value: !Ref 'AWS::StackName'
+  Arn:
+    Value: {'Fn::ImportValue': !Sub '${ParentAlertStack}-TopicARN'}
+    Export:
+      Name: !Sub '${AWS::StackName}-Arn'

@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for an Application Load Balancer Module from aws-cf-modules to cfn-modules (e.g. a fargate/ecs cluster/service)'
+Parameters:
+  AlbModule:
+    Description: 'Stack name of parent ALB module based on exports from  template.'
+    Type: String
+  AlbListenerHttp:
+    Description: 'Stack name of parent ALB Listener module based on exports from  template.'
+    Type: String
+  AlbListenerHttps:
+    Description: 'Stack name of parent ALB Listener module based on exports from  template.'
+    Type: String
+    Default: ''
+Conditions:
+  HasHttpsListener: !Not [!Equal [!Ref AlbListenerHttps, '']]
+Outputs:
+  TemplateID:
+    Description: 'cloudonaut.io template id.'
+    Value: 'fargate/cluster'
+  TemplateVersion:
+    Description: 'cloudonaut.io template version.'
+    Value: '__VERSION__'
+  StackName:
+    Description: 'Stack name.'
+    Value: !Sub '${AWS::StackName}'
+  DNSName:
+    Description: 'The DNS name for the ECS cluster load balancer.'
+    Value: {'Fn::ImportValue': !Sub '${AlbModule}-DnsName'}
+    Export:
+      Name: !Sub '${AWS::StackName}-DNSName'
+  URL:
+    Description: 'URL to the ECS cluster.'
+    Value: !Sub
+     - 'http://${DNSName}'
+     - DNSName: {'Fn::ImportValue': !Sub '${AlbModule}-DnsName'}
+    Export:
+      Name: !Sub '${AWS::StackName}-URL'
+  CanonicalHostedZoneID:
+    Description: 'The ID of the Amazon Route 53 hosted zone associated with the load balancer.'
+    Value: {'Fn::ImportValue': !Sub '${AlbModule}-CanonicalHostedZoneId'}
+    Export:
+      Name: !Sub '${AWS::StackName}-CanonicalHostedZoneID'
+  LoadBalancerFullName:
+    Description: 'ALB full name for services.'
+    Value: {'Fn::ImportValue': !Sub '${AlbModule}-LoadBalancerFullName'}
+    Export:
+      Name: !Sub '${AWS::StackName}-LoadBalancerFullName'
+  LoadBalancerSecurityGroup:
+    Description: 'The Security Group of the Load Balancer.'
+    Value: {'Fn::ImportValue': !Sub '${AlbModule}-SecurityGroupId'}
+    Export:
+      Name: !Sub '${AWS::StackName}-LoadBalancerSecurityGroup'
+  HttpListener:
+    Description: 'ALB HTTP listener for services.'
+    Value: {'Fn::ImportValue': !Sub '${AlbListenerHttpModule}-Arn'}
+    Export:
+      Name: !Sub '${AWS::StackName}-HttpListener'
+  HttpsListener:
+    Condition: HasHttpsListener
+    Description: 'ALB HTTPS listener for services.'
+    Value: {'Fn::ImportValue': !Sub '${AlbListenerHttpsModule}-Arn'}
+    Export:
+      Name: !Sub '${AWS::StackName}-HttpsListener'

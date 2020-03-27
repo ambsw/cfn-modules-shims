@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for an Application Load Balancer Module from aws-cf-modules to cfn-modules (e.g. a fargate/ecs cluster/service)'
+Parameters:
+  ParentALBStack:
+    Description: 'Stack name of parent ALB stack based on exports from  template.'
+    Type: String
+  ExposesLoadBalancerSecurityGroup:
+    Description: 'Whether to pass through (Output/Export) variable for Load Balancer Security Group (fargate/cluster only).'
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+Conditions:
+  HasLoadBalancerSecurityGroup: !Equals [!Ref ExposesLoadBalancerSecurityGroup, 'true']
+Outputs:
+  ModuleId:
+    Value: 'alb'
+  ModuleVersion:
+    Value: '1.0.4'
+  StackName:
+    Value: !Ref 'AWS::StackName'
+  # Not exposed by aws-cf-templates/
+  #Arn:
+  #  Value: !Ref LoadBalancer
+  #  Export:
+  #    Name: !Sub '${AWS::StackName}-Arn'
+  CanonicalHostedZoneId:
+    Value: {'Fn::ImportValue': !Sub '${ParentALBStack}-CanonicalHostedZoneID'}
+    Export:
+      Name: !Sub '${AWS::StackName}-CanonicalHostedZoneId'
+  DnsName:
+    Value: {'Fn::ImportValue': !Sub '${ParentALBStack}-DNSName'}
+    Export:
+      Name: !Sub '${AWS::StackName}-DnsName'
+  LoadBalancerFullName:
+    Value: {'Fn::ImportValue': !Sub '${ParentALBStack}-LoadBalancerFullName'}
+    Export:
+      Name: !Sub '${AWS::StackName}-LoadBalancerFullName'
+  SecurityGroupId:
+    Condition: HasLoadBalancerSecurityGroup
+    Value: {'Fn::ImportValue': !Sub '${ParentALBStack}-LoadBalancerSecurityGroup'}
+    Export:
+      Name: !Sub '${AWS::StackName}-SecurityGroupId'
