@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for an Application Load Balancer Module from aws-cf-modules to cfn-modules (e.g. a fargate/ecs cluster/service)'
+Parameters:
+  ParentKmsKeyStack:
+    Description: 'Stack name of kms-key module.'
+    Type: String
+Outputs:
+  ModuleId:
+    Value: 'kms-key'
+  ModuleVersion:
+    Value: '1.2.1'
+  StackName:
+    Value: !Ref 'AWS::StackName'
+  Arn:
+    Value: {'Fn::ImportValue': !Sub '${ParentKmsKeyStack}-KeyArn'}
+    Export:
+      Name: !Sub '${AWS::StackName}-Arn'
+  IamActions:
+    Value: 'kms:Encrypt,kms:Decrypt,kms:ReEncrypt*,kms:GenerateDataKey*,kms:CreateGrant,kms:ListGrants,kms:DescribeKey'
+    Export:
+      Name: !Sub '${AWS::StackName}-IamActions'
+  IamResources:
+    Value: {'Fn::ImportValue': !Sub '${ParentKmsKeyStack}-KeyArn'}
+    Export:
+      Name: !Sub '${AWS::StackName}-IamResources'

@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for an Application Load Balancer Module from aws-cf-modules to cfn-modules (e.g. a fargate/ecs cluster/service)'
+Parameters:
+  KmsKeyModule:
+    Description: 'Stack name of kms-key module.'
+    Type: String
+Outputs:
+  TemplateID:
+    Description: 'cloudonaut.io template id.'
+    Value: 'security/kms-key'
+  TemplateVersion:
+    Description: 'cloudonaut.io template version.'
+    Value: '__VERSION__'
+  StackName:
+    Description: 'Stack name.'
+    Value: !Sub '${AWS::StackName}'
+  # NOT SUPPORTED
+  #KeyId:
+  #  Description: 'Key id.'
+  #  Value: {'Fn::ImportValue': !Sub '${KmsKeyModule}-DnsName'}
+  #  Export:
+  #    Name: !Sub '${AWS::StackName}-KeyId'
+  KeyArn:
+    Description: 'Key ARN.'
+    Value: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}
+    Export:
+      Name: !Sub '${AWS::StackName}-KeyArn'
