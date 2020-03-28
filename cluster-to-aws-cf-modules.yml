@@ -16,6 +16,11 @@ Parameters:
     Type: String
 Conditions:
   HasHttpsListener: !Not [!Equal [!Ref AlbListenerHttps, '']]
+  Never: !Equals ['true', 'false']
+Resources:
+  NullResource:
+    Condition: Never
+    Type: 'Custom::Null'
 Outputs:
   TemplateID:
     Description: 'cloudonaut.io template id.'

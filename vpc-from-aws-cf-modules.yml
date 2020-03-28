@@ -11,6 +11,11 @@ Parameters:
     AllowedValues: ['true', 'false']
 Conditions:
   HasAvailabilityZoneC: !Equals [!Ref ExportSubnetC, 'true']
+  Never: !Equals ['true', 'false']
+Resources:
+  NullResource:
+    Condition: Never
+    Type: 'Custom::Null'
 Outputs:
   ModuleId:
     Value: 'vpc'

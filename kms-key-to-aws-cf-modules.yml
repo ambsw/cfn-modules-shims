@@ -4,6 +4,12 @@ Parameters:
   KmsKeyModule:
     Description: 'Stack name of kms-key module.'
     Type: String
+Conditions:
+  Never: !Equals ['true', 'false']
+Resources:
+  NullResource:
+    Condition: Never
+    Type: 'Custom::Null'
 Outputs:
   TemplateID:
     Description: 'cloudonaut.io template id.'

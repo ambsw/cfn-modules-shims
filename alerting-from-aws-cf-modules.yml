@@ -4,6 +4,12 @@ Parameters:
   ParentAlertStack:
     Description: 'Parent alert stack based on operations/alert.yaml template.'
     Type: String
+Conditions:
+  Never: !Equals ['true', 'false']
+Resources:
+  NullResource:
+    Condition: Never
+    Type: 'Custom::Null'
 Outputs:
   ModuleId:
     Value: 'alerting'
