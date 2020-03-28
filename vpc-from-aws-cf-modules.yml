@@ -10,7 +10,7 @@ Parameters:
     Default: 'false'
     AllowedValues: ['true', 'false']
 Conditions:
-  HasAvailabilityZoneC: !Equals [!Ref ExportSubnetC, 'true']
+  HasAvailabilityZoneC: !Equals [!Ref ExportAvailabilityZoneC, 'true']
   Never: !Equals ['true', 'false']
 Resources:
   NullResource:

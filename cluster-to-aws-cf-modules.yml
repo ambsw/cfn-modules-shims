@@ -4,10 +4,10 @@ Parameters:
   AlbModule:
     Description: 'Stack name of parent ALB module based on exports from  template.'
     Type: String
-  AlbListenerHttp:
+  AlbListenerHttpModule:
     Description: 'Stack name of parent ALB Listener module based on exports from  template.'
     Type: String
-  AlbListenerHttps:
+  AlbListenerHttpsModule:
     Description: 'Stack name of parent ALB Listener module based on exports from  template.'
     Type: String
     Default: ''
@@ -15,7 +15,7 @@ Parameters:
     Description: 'Optional stack name of ecs-cluster module (if empty, an ECS cluster is created).'
     Type: String
 Conditions:
-  HasHttpsListener: !Not [!Equal [!Ref AlbListenerHttps, '']]
+  HasHttpsListener: !Not [!Equals [!Ref AlbListenerHttpsModule, '']]
   Never: !Equals ['true', 'false']
 Resources:
   NullResource:
@@ -33,7 +33,7 @@ Outputs:
     Value: !Sub '${AWS::StackName}'
   Cluster:
     Description: 'Fargate cluster.'
-     - DNSName: {'Fn::ImportValue': !Sub '${ClusterModule}-Name'}
+    Value: {'Fn::ImportValue': !Sub '${ClusterModule}-Name'}
     Export:
       Name: !Sub '${AWS::StackName}-Cluster'
   DNSName:

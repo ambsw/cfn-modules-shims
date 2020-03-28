@@ -4,15 +4,15 @@ Parameters:
   AlbModule:
     Description: 'Stack name of parent ALB module based on exports from  template.'
     Type: String
-  AlbListenerHttp:
+  AlbListenerHttpModule:
     Description: 'Stack name of parent ALB Listener module based on exports from  template.'
     Type: String
-  AlbListenerHttps:
+  AlbListenerHttpsModule:
     Description: 'Stack name of parent ALB Listener module based on exports from  template.'
     Type: String
     Default: ''
 Conditions:
-  HasHttpsListener: !Not [!Equal [!Ref AlbListenerHttps, '']]
+  HasHttpsListener: !Not [!Equals [!Ref AlbListenerHttpsModule, '']]
   Never: !Equals ['true', 'false']
 Resources:
   NullResource:
