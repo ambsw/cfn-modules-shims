@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A shim to convert the exports/outputs for a Network Load Balancer Target Group from aws-cf-modules to cfn-modules'
+Parameters:
+  NlbTargetModule:
+    Description: 'Stack name of parent ALB Listener module based on exports from  template.'
+    Type: String
+Conditions:
+  Never: !Equals ['true', 'false']
+Resources:
+  NullResource:
+    Condition: Never
+    Type: 'Custom::Null'
+Outputs:
+  TemplateID:
+    Description: 'ambsw template id.'
+    Value: 'nlb-group/to-aws-cf-modules'
+  TemplateVersion:
+    Description: 'ambsw template version.'
+    Value: '__VERSION__'
+  StackName:
+    Description: 'Stack name.'
+    Value: !Sub '${AWS::StackName}'
+  TargetGroup:
+    Description: 'Target Group for Load Balancer'
+    Value: !GetAtt 'NlbTargetModule.Outputs.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}-TargetGroup'
+  SecurityGroup:
+    Description: 'Security Group for Load Balancer'
+    Value: !GetAtt 'NlbTargetModule.Outputs.SecurityGroupId'
+    Export:
+      Name: !Sub '${AWS::StackName}-SecurityGroup'
