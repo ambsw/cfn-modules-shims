@@ -22,11 +22,12 @@ Outputs:
     Value: !Sub '${AWS::StackName}'
   TargetGroup:
     Description: 'Target Group for Load Balancer'
-    Value: !GetAtt 'NlbTargetModule.Outputs.Arn'
+    Value: {'Fn::ImportValue': !Sub '${NlbTargetModule}-Arn'}
     Export:
       Name: !Sub '${AWS::StackName}-TargetGroup'
+  # Our version doesn't bother since upstream can't use 4x copies
   SecurityGroup:
     Description: 'Security Group for Load Balancer'
-    Value: !GetAtt 'NlbTargetModule.Outputs.SecurityGroupId'
+    Value: {'Fn::ImportValue': !Sub '${NlbTargetModule}-SecurityGroupId'}
     Export:
       Name: !Sub '${AWS::StackName}-SecurityGroup'
